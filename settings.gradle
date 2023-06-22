@@ -1,2 +1,2 @@
-include ':example', ':vad'
+include ':vad'
 rootProject.name='VAD'

@@ -8,6 +8,5 @@ package com.konovalov.vad.config
  * @property value The numeric value associated with the Model.
  */
 enum class Model(val value: Int) {
-    WEB_RTC_GMM(0),
-    SILERO_DNN(1);
+    WEB_RTC_GMM(0);
 }

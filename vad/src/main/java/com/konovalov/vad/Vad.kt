@@ -1,12 +1,10 @@
 package com.konovalov.vad
 
-import android.content.Context
 import com.konovalov.vad.config.FrameSize
 import com.konovalov.vad.config.Mode
 import com.konovalov.vad.config.Model
 import com.konovalov.vad.config.SampleRate
 import com.konovalov.vad.models.VadModel
-import com.konovalov.vad.models.VadSilero
 import com.konovalov.vad.models.VadWebRTC
 
 /**
@@ -18,13 +16,6 @@ import com.konovalov.vad.models.VadWebRTC
  *  Use the builder function to create an instance of this builder, and then chain the
  *  setter methods to set the desired parameters. Finally, call the build method to construct
  *  the appropriate VAD model based on the provided parameters.
- *
- * The Silero VAD supports the following parameters:
- * Sample Rates: 8000Hz, 16000Hz
- * Frame Sizes (per sample rate):
- *             For 8000Hz: 256, 512, 768
- *             For 16000Hz: 512, 1024, 1536
- * Mode: NORMAL, AGGRESSIVE, VERY_AGGRESSIVE
  *
  * The WebRTC VAD supports the following parameters:
  * Sample Rates: 8000Hz, 16000Hz, 32000Hz, 48000Hz
@@ -43,7 +34,6 @@ import com.konovalov.vad.models.VadWebRTC
  * @param sampleRate (required) - The sample rate of the audio input.
  * @param frameSize (required) - The frame size of the audio input.
  * @param mode (required) - The mode of the VAD model.
- * @param context (optional) - The context is required for VadSilero
  * @param speechDurationMs (optional) - used in Continuous Speech detector, the value of this
  * parameter will define the necessary and sufficient duration of negative results
  * to recognize it as silence. Negative numbers are not allowed.
@@ -53,7 +43,6 @@ import com.konovalov.vad.models.VadWebRTC
  * </p>
  */
 class Vad private constructor() {
-    private var context: Context? = null
     private lateinit var model: Model
     private lateinit var sampleRate: SampleRate
     private lateinit var frameSize: FrameSize
@@ -63,10 +52,6 @@ class Vad private constructor() {
 
     fun setModel(model: Model): Vad = apply {
         this.model = model
-    }
-
-    fun setContext(context: Context): Vad = apply {
-        this.context = context.applicationContext ?: context
     }
 
     fun setSampleRate(sampleRate: SampleRate): Vad = apply {
@@ -94,24 +79,10 @@ class Vad private constructor() {
      * Builds and returns a VadModel instance based on the specified parameters.
      * </p>
      * @return The constructed VadModel.
-     * @throws IllegalArgumentException if the context is null and the model is Model.SILERO_DNN.
      */
     fun build(): VadModel {
-        require(!(context == null && model == Model.SILERO_DNN)) {
-            "Context is required for Model.SILERO_DNN!"
-        }
-
         return when (model) {
             Model.WEB_RTC_GMM -> VadWebRTC(
-                sampleRate,
-                frameSize,
-                mode,
-                speechDurationMs,
-                silenceDurationMs
-            )
-
-            Model.SILERO_DNN -> VadSilero(
-                context!!,
                 sampleRate,
                 frameSize,
                 mode,

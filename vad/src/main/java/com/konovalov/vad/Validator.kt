@@ -102,7 +102,6 @@ object Validator {
     fun getValidFrameSizes(model: Model, sampleRate: SampleRate): List<FrameSize> {
         return when (model) {
             Model.WEB_RTC_GMM -> WEB_RTC_VALID_FRAMES[sampleRate] ?: emptyList()
-            Model.SILERO_DNN -> SILERO_VALID_FRAMES[sampleRate] ?: emptyList()
         }
     }
 
@@ -117,7 +116,6 @@ object Validator {
     fun getValidSampleRates(model: Model): List<SampleRate> {
         return when (model) {
             Model.WEB_RTC_GMM -> WEB_RTC_VALID_FRAMES.keys.toList()
-            Model.SILERO_DNN -> SILERO_VALID_FRAMES.keys.toList()
         }
     }
 }
