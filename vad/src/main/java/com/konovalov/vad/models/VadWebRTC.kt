@@ -135,7 +135,7 @@ internal class VadWebRTC(
      * </p>
      * @return true if the VAD is initialized, false otherwise.
      */
-    private fun isVadInitialized(): Boolean = nativeHandle > 0
+    private fun isVadInitialized(): Boolean = (nativeHandle != -1L) && (nativeHandle != 0L)
 
     /**
      * <p>
